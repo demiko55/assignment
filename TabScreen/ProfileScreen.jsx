@@ -2,15 +2,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, Button, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { AppStateContext } from '../App.js';
-import ImageTile from './ImageTile.jsx';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { Cloudinary } from "@cloudinary/url-gen";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
+import {Menu, MenuOptions, MenuOption,MenuTrigger} from 'react-native-popup-menu';
 
 
 const cld = new Cloudinary({
@@ -20,7 +14,7 @@ const cld = new Cloudinary({
 });
 
 export default function ProfileScreen() {
-  const { users, activeUserIndex, otherUsers, setActiveUserIndex, setOtherUsers } = useContext(AppStateContext);
+  const { users, setUsers, activeUserIndex, otherUsers, setActiveUserIndex } = useContext(AppStateContext);
 
   console.log('otherUsers', otherUsers);
 
@@ -34,24 +28,34 @@ export default function ProfileScreen() {
     profileImage: require('../assets/eggplant.jpg'),
     images: [],
   },);
+  //images每次发生变化时，更新User 中的图片信息images
+  const updateUser = ()=>{
+    let tempUsers = [...users];
+    for (let i = 0; i < users.length; i++) {
+      if (tempUsers[i].id === activeUserIndex) {
+        tempUsers[i].images = images;
+        console.log('tempUserusers[i]', tempUsers[i]);
+        setLoginUser(tempUsers[i]);
+        setUsers(tempUsers);
+      }
+    }
+  }
+  useEffect(()=>updateUser(), [images]);
 
-  console.log('LoginUSer', loginUser);
-
-  const updateUsersImage = () => {
-    let tempLoginUser = {};
+  //activeIndex变化时，则更新整个loginUser
+  const updateLoginUser = ()=>{
+    let tempLoginUser={};
     for (let i = 0; i < users.length; i++) {
       if (users[i].id === activeUserIndex) {
-        users[i].images = images;
         tempLoginUser = users[i];
       }
     }
     setLoginUser(tempLoginUser);
-    console.log('users ', users);
+    setImages(tempLoginUser.images);
   }
+  useEffect(()=>updateLoginUser(), [activeUserIndex]);
 
-
-  useEffect(() => updateUsersImage(), [images, activeUserIndex]);
-
+  console.log('LoginUSer', loginUser);
 
   const handleChoosePhoto = async () => {
     const result = await launchImageLibrary({
@@ -100,9 +104,6 @@ export default function ProfileScreen() {
 
   console.log('images', images);
 
-  const handleLike = ()=>{
-
-  }
 
   return (
     <SafeAreaView >

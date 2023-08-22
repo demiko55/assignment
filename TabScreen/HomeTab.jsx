@@ -5,7 +5,7 @@ import { AppStateContext } from '../App.js';
 
 export default function HomeTab({ navigation }) {
   const { users, activeUserIndex, setClickUserIndex, clickedUserIndex, otherUsers, setOtherUsers } = useContext(AppStateContext);
-  console.log('users is array', users);
+  console.log('users', users);
   console.log('otherUsers', otherUsers);
 
   const handleOtherUsers = ()=>{

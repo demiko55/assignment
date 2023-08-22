@@ -23,35 +23,37 @@ export default function App() {
 
   const [activeUserIndex, setActiveUserIndex] = useState(1);
   const [clickedUserIndex, setClickUserIndex] = useState(0);
-  const users = [
-    {
-      id: 1,
-      firstname: 'User 1',
-      profileImage: require('./assets/eggplant.jpg'),
-      images: [],
-    },
-    {
-      id: 2,
-      firstname: 'User 2',
-      profileImage: require('./assets/waterSpinach.jpeg'),
-      images: [],
-    },
-    {
-      id: 3,
-      firstname: 'User 3',
-      profileImage: require('./assets/celtuce.jpg'),
-      images: [],
-    },
-    {
-      id: 4,
-      firstname: 'User 4',
-      profileImage: require('./assets/chineseKale.jpeg'),
-      images: [],
-    }
-  ];
+  const [users, setUsers] = useState(
+    [
+      {
+        id: 1,
+        firstname: 'User 1',
+        profileImage: require('./assets/eggplant.jpg'),
+        images: [],
+      },
+      {
+        id: 2,
+        firstname: 'User 2',
+        profileImage: require('./assets/waterSpinach.jpeg'),
+        images: [],
+      },
+      {
+        id: 3,
+        firstname: 'User 3',
+        profileImage: require('./assets/celtuce.jpg'),
+        images: [],
+      },
+      {
+        id: 4,
+        firstname: 'User 4',
+        profileImage: require('./assets/chineseKale.jpeg'),
+        images: [],
+      }
+    ]
+  )
   const [otherUsers, setOtherUsers] = useState(users);
 
-  const contextValue = { users, activeUserIndex, setActiveUserIndex, clickedUserIndex, setClickUserIndex, otherUsers, setOtherUsers };
+  const contextValue = { users, setUsers, activeUserIndex, setActiveUserIndex, clickedUserIndex, setClickUserIndex, otherUsers, setOtherUsers };
 
   return (
     <AppStateContext.Provider value={contextValue}>

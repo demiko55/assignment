@@ -1,49 +1,75 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {View, Text, SafeAreaView, StyleSheet, Image} from 'react-native';
-import {AppStateContext} from '../App.js';
-import ImageTile from './ImageTile.jsx';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { AppStateContext } from '../App.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { AdvancedImage } from 'cloudinary-react-native';
+import { Cloudinary } from "@cloudinary/url-gen";
 
 
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: 'dzvkuocfb'
+  }
+});
 
-export default Display  = ()=>{
-  const {clickedUserIndex, users} = useContext(AppStateContext);
+export default Display = () => {
+  const { clickedUserIndex, users } = useContext(AppStateContext);
 
   console.log('clickedUserIndex in Display', clickedUserIndex);
 
   const [userInfo, setUserInfo] = useState({});
+  const [toggle, setToggle] = useState(false);
 
-  useEffect(()=>{
-    for(let i = 0; i<users.length; i++){
-      if(users[i].id === clickedUserIndex){
+  useEffect(() => {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].id === clickedUserIndex) {
         setUserInfo(users[i]);
       }
     }
   }, []);
 
-  console.log("userInfo", userInfo.images);
+  console.log("userInfo", userInfo);
 
   if (userInfo === undefined || userInfo.images === undefined) {
     return (
       <Text>
-      'no userInfo'
+        'no userInfo'
       </Text>
     );
-  } else{
+  } else {
     return (
       <SafeAreaView>
         <View style={styles.userContainer}>
           <Image source={userInfo.profileImage} style={styles.profileImage} />
           <Text style={styles.username}>{userInfo.firstname}</Text>
         </View>
-        <Ionicons.Button name="heart-outline" size = {18} backgroundColor='none' color='#007AFF'>
-                  <Text>Like</Text>
-        </Ionicons.Button>
+        {
+          <View style={styles.row}>
+            {
+              userInfo.images.map((public_id) => {
+                const myImage = cld.image(public_id);
+                return (
+                  <View key={public_id}>
+                    <AdvancedImage cldImg={myImage} style={styles.image} />
+                    {/* <Ionicons.Button name={toggle?"heart":"heart-outline"} size={18} backgroundColor='none' color='#007AFF' onPress={()=>setToggle(!toggle)}>
+                      <Text>Like</Text>
+                    </Ionicons.Button> */}
+                    <TouchableOpacity style={{marginLeft:5}}>
+                      <Ionicons name={toggle ? "heart" : "heart-outline"} size={18}  color='#007AFF' onPress={() => setToggle(!toggle)}>
+                      <Text>Like</Text>
+                      </Ionicons>
+                    </TouchableOpacity>
+
+                  </View>
+                )
+              })
+            }
+          </View>
+        }
+
       </SafeAreaView>
     )
   }
-
-
 }
 
 const styles = StyleSheet.create({
@@ -62,5 +88,16 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 16,
+  },
+  row: {
+    flexDirection: 'row', // Arrange children horizontally
+    alignItems: 'center', // Align children vertically in the middle
+    justifyContent: 'flex-start', // Distribute children evenly along the main axis
+    flexWrap: 'wrap'
+  },
+  image: {
+    width: 120,
+    height: 120,
+    margin: 5,
   },
 });
