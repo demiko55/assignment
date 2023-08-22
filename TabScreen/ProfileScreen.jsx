@@ -3,21 +3,35 @@ import { StyleSheet, Text, View, SafeAreaView, Image, Button, FlatList, Touchabl
 import { launchImageLibrary } from 'react-native-image-picker';
 import { AppStateContext } from '../App.js';
 import ImageTile from './ImageTile.jsx';
+import { AdvancedImage } from 'cloudinary-react-native';
+import { Cloudinary } from "@cloudinary/url-gen";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: 'dzvkuocfb'
+  }
+});
 
 export default function ProfileScreen() {
   const { users, activeUserIndex } = useContext(AppStateContext);
   console.log('activeUserIndex', activeUserIndex);
 
+  const [images, setImages] = useState([]);
+
   const [loginUser, setLoginUser] = useState({
     id: 1,
     firstname: 'User 1',
     profileImage: require('../assets/eggplant.jpg'),
-    images: [],
+    images: images,
   },);
-  const [images, setImages] = useState([]);
 
   const updateUsersImage = () => {
-
     for (let i = 0; i < users.length; i++) {
       if (users[i].id === activeUserIndex) {
         users[i].images = loginUser.images;
@@ -26,16 +40,9 @@ export default function ProfileScreen() {
     console.log('users ', users);
   }
 
-  useEffect(()=>updateUsersImage(), [loginUser])
+  useEffect(() => updateUsersImage(), [images]);
 
 
-  const uploadImage = () => {
-    handleChoosePhoto();
-  }
-  const switchAccount = () => {
-
-
-  }
   const handleChoosePhoto = async () => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
@@ -45,16 +52,16 @@ export default function ProfileScreen() {
     });
     if (result) {
       let data = result.assets;
-      console.log('choosephoto result', data);
-      // setImages(result.assets);
-      data.forEach((imageInfo) => {
-        let file = {
-          uri: imageInfo.uri,
-          type: imageInfo.type,
-          name: imageInfo.fileName
-        }
-        handleUpload(file);
-      })
+      if (data) {
+        data.forEach((imageInfo) => {
+          let file = {
+            uri: imageInfo.uri,
+            type: imageInfo.type,
+            name: imageInfo.fileName
+          }
+          handleUpload(file);
+        })
+      }
     }
   }
 
@@ -71,12 +78,12 @@ export default function ProfileScreen() {
       .then(data => {
         console.log('cloudinary data', data);
         let temp = loginUser;
+        // console.log('temp before', temp);
         temp.images.push(data.public_id);
-        setLoginUser(temp);
+        // console.log('temp after', temp);
+        setImages(temp.images);
       })
   }
-
-  console.log('loginUser', loginUser);
 
   return (
     <SafeAreaView >
@@ -86,14 +93,33 @@ export default function ProfileScreen() {
       </View>
       <View>
         <Button
-          onPress={uploadImage}
+          onPress={handleChoosePhoto}
           title="Upload Image"
           style={styles.button}
         />
-        <Button onPress={switchAccount} title="Switch account" />
-      </View>
-      <ImageTile loginUser={loginUser} />
+        <Menu style={{ height: 50 }}>
+          <MenuTrigger text='Switch Account' customStyles={triggerStyles}/>
+          <MenuOptions customStyles={optionsStyles}>
+            <MenuOption onSelect={() => alert(`Save`)} text='Save' />
+            <MenuOption onSelect={() => alert(`Delete`)} >
+              <Text style={{ color: 'red' }}>Delete</Text>
+            </MenuOption>
+            <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='Disabled' />
+          </MenuOptions>
+        </Menu>
 
+      </View>
+      {images.length > 0 && (
+        <View>
+          {
+            images.map((public_id, index) => {
+              console.log('here?????????', public_id);
+              const myImage = cld.image(public_id);
+              return <AdvancedImage cldImg={myImage} style={{ width: 200, height: 200 }} key={index} />
+            })
+          }
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -121,22 +147,50 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 2,
   }
-
 });
 
+const triggerStyles = {
+  triggerText: {
+    color: 'white',
+    fontSize: 16,
 
-// var formData = new FormData();
-//       formData.append('file', fileElem.files[i]);
-//       formData.append('upload_preset', 'fec-cars');
-//       // using cloudinary as a third party host database for images
-//       var options = {
-//         url: 'https://api.cloudinary.com/v1_1/fec-cars/image/upload',
-//         method: 'POST',
-//         data: formData
-//       };
-//       axios(options)
-//         .then(({ data }) => {
-//           //setImagesURL(imagesURL.concat(data.url));
-//           imageArr.push(data.url);
-//         })
-//         .catch(err => console.log(err));
+  },
+  triggerOuterWrapper: {
+    padding: 5,
+    flex: 1,
+  },
+  triggerWrapper: {
+    backgroundColor: 'blue',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  triggerTouchable: {
+    underlayColor: 'darkblue',
+    activeOpacity: 70,
+    style : {
+      flex: 1,
+    },
+  },
+};
+
+const optionsStyles = {
+  optionsContainer: {
+    backgroundColor: 'green',
+    padding: 5,
+  },
+  optionsWrapper: {
+    backgroundColor: 'purple',
+  },
+  optionWrapper: {
+    backgroundColor: 'yellow',
+    margin: 5,
+  },
+  optionTouchable: {
+    underlayColor: 'gold',
+    activeOpacity: 70,
+  },
+  optionText: {
+    color: 'brown',
+  },
+};

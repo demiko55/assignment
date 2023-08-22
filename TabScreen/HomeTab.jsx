@@ -4,11 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 import { AppStateContext } from '../App.js';
 
 export default function HomeTab({ navigation }) {
-  const { users, activeUserIndex, setClickUserIndex, clickedUserIndex } = useContext(AppStateContext);
+  const { users, activeUserIndex, setClickUserIndex, clickedUserIndex, otherUsers, setOtherUsers } = useContext(AppStateContext);
   console.log('users is array', users);
-
-  const [otherUsers, setOtherUsers] = useState(users);
-  console.log('ptherUsers', otherUsers);
+  console.log('otherUsers', otherUsers);
 
   const handleOtherUsers = ()=>{
     const temp = [...users];

@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import {View, Text, SafeAreaView, StyleSheet, Image} from 'react-native';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { Cloudinary } from "@cloudinary/url-gen";
@@ -9,20 +10,20 @@ const cld = new Cloudinary({
     }
 });
 
-export default  ImageTile = ({loginUser})=>{
-  let images = loginUser.images;
-  console.log('image Tile', images);
-
-  if(images){
+export default  ImageTile = ({imgs})=>{
+  useEffect(()=>{
+    console.log('image tile', imgs);
+  }, [imgs]);
+  if(imgs){
     return (
-      <>
+      <View>
         {
-          images.map((public_id, index) => {
+          imgs.map((public_id, index) => {
             const myImage = cld.image(public_id);
             return <AdvancedImage cldImg={myImage} style={{ width: 300, height: 200 }} key={index}/>
           })
         }
-      </>
+      </View>
     )
   }
 

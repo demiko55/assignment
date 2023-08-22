@@ -12,6 +12,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './TabScreen/HomeScreen.jsx';
 import ProfileScreen from './TabScreen/ProfileScreen.jsx';
+import { MenuProvider } from 'react-native-popup-menu';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -47,33 +49,38 @@ export default function App() {
       images: [],
     }
   ];
-  const contextValue = {users, activeUserIndex, setActiveUserIndex, clickedUserIndex, setClickUserIndex};
+  const [otherUsers, setOtherUsers] = useState(users);
+
+  const contextValue = { users, activeUserIndex, setActiveUserIndex, clickedUserIndex, setClickUserIndex, otherUsers, setOtherUsers };
 
   return (
     <AppStateContext.Provider value={contextValue}>
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
-              if (route.name === 'Home') {
-                iconName = focused
-                  ? 'home'
-                  : 'home-outline';
-              } else if (route.name === 'Profile') {
-                iconName = focused ? 'person' : 'person-outline';
-              }
-              // You can return any component that you like here!
-              return <Ionicons name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: 'green',
-            tabBarInactiveTintColor: 'grey',
-          })}
-        >
-          <Tab.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <MenuProvider>
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+                if (route.name === 'Home') {
+                  iconName = focused
+                    ? 'home'
+                    : 'home-outline';
+                } else if (route.name === 'Profile') {
+                  iconName = focused ? 'person' : 'person-outline';
+                }
+                // You can return any component that you like here!
+                return <Ionicons name={iconName} size={size} color={color} />;
+              },
+              tabBarActiveTintColor: 'green',
+              tabBarInactiveTintColor: 'grey',
+            })}
+          >
+            <Tab.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
+            <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </MenuProvider>
+
 
     </AppStateContext.Provider>
 
