@@ -4,6 +4,7 @@ import { AppStateContext } from '../App.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { Cloudinary } from "@cloudinary/url-gen";
+import Like from './Like.jsx';
 
 
 const cld = new Cloudinary({
@@ -18,7 +19,6 @@ export default Display = () => {
   console.log('clickedUserIndex in Display', clickedUserIndex);
 
   const [userInfo, setUserInfo] = useState({});
-  const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
     for (let i = 0; i < users.length; i++) {
@@ -51,14 +51,12 @@ export default Display = () => {
                 return (
                   <View key={public_id}>
                     <AdvancedImage cldImg={myImage} style={styles.image} />
-                    {/* <Ionicons.Button name={toggle?"heart":"heart-outline"} size={18} backgroundColor='none' color='#007AFF' onPress={()=>setToggle(!toggle)}>
-                      <Text>Like</Text>
-                    </Ionicons.Button> */}
-                    <TouchableOpacity style={{marginLeft:5}}>
-                      <Ionicons name={toggle ? "heart" : "heart-outline"} size={18}  color='#007AFF' onPress={() => setToggle(!toggle)}>
+                    {/* <TouchableOpacity style={{marginLeft:5}}>
+                      <Ionicons name={flag ? "heart" : "heart-outline"} size={18}  color='#007AFF' onPress={handleLike}>
                       <Text>Like</Text>
                       </Ionicons>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+                    <Like />
 
                   </View>
                 )
