@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, Button, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, Button, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { AppStateContext } from '../App.js';
 import ImageTile from './ImageTile.jsx';
@@ -12,6 +12,7 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
+
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'dzvkuocfb'
@@ -19,7 +20,10 @@ const cld = new Cloudinary({
 });
 
 export default function ProfileScreen() {
-  const { users, activeUserIndex } = useContext(AppStateContext);
+  const { users, activeUserIndex, otherUsers, setActiveUserIndex, setOtherUsers } = useContext(AppStateContext);
+
+  console.log('otherUsers', otherUsers);
+
   console.log('activeUserIndex', activeUserIndex);
 
   const [images, setImages] = useState([]);
@@ -28,19 +32,25 @@ export default function ProfileScreen() {
     id: 1,
     firstname: 'User 1',
     profileImage: require('../assets/eggplant.jpg'),
-    images: images,
+    images: [],
   },);
 
+  console.log('LoginUSer', loginUser);
+
   const updateUsersImage = () => {
+    let tempLoginUser = {};
     for (let i = 0; i < users.length; i++) {
       if (users[i].id === activeUserIndex) {
-        users[i].images = loginUser.images;
+        users[i].images = images;
+        tempLoginUser = users[i];
       }
     }
+    setLoginUser(tempLoginUser);
     console.log('users ', users);
   }
 
-  useEffect(() => updateUsersImage(), [images]);
+
+  useEffect(() => updateUsersImage(), [images, activeUserIndex]);
 
 
   const handleChoosePhoto = async () => {
@@ -59,7 +69,7 @@ export default function ProfileScreen() {
             type: imageInfo.type,
             name: imageInfo.fileName
           }
-          handleUpload(file);
+          handleUpload(file);//setTimeout()
         })
       }
     }
@@ -77,12 +87,21 @@ export default function ProfileScreen() {
     }).then(res => res.json())
       .then(data => {
         console.log('cloudinary data', data);
-        let temp = loginUser;
-        // console.log('temp before', temp);
-        temp.images.push(data.public_id);
+        let temp = [];
+        temp.push(data.public_id);
         // console.log('temp after', temp);
-        setImages(temp.images);
+        setImages([...images, ...temp]);
       })
+  }
+
+  const handleSwtich = (targetUser) => {
+    setActiveUserIndex(targetUser.id);
+  }
+
+  console.log('images', images);
+
+  const handleLike = ()=>{
+
   }
 
   return (
@@ -98,28 +117,27 @@ export default function ProfileScreen() {
           style={styles.button}
         />
         <Menu style={{ height: 50 }}>
-          <MenuTrigger text='Switch Account' customStyles={triggerStyles}/>
+          <MenuTrigger text='Switch Account' customStyles={triggerStyles} />
           <MenuOptions customStyles={optionsStyles}>
-            <MenuOption onSelect={() => alert(`Save`)} text='Save' />
-            <MenuOption onSelect={() => alert(`Delete`)} >
-              <Text style={{ color: 'red' }}>Delete</Text>
-            </MenuOption>
-            <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='Disabled' />
+            <MenuOption onSelect={() => handleSwtich(otherUsers[0])} text={otherUsers[0].firstname} />
+            <MenuOption onSelect={() => handleSwtich(otherUsers[1])} text={otherUsers[1].firstname} />
+            <MenuOption onSelect={() => handleSwtich(otherUsers[2])} text={otherUsers[2].firstname} />
           </MenuOptions>
         </Menu>
-
       </View>
-      {images.length > 0 && (
-        <View>
-          {
-            images.map((public_id, index) => {
-              console.log('here?????????', public_id);
-              const myImage = cld.image(public_id);
-              return <AdvancedImage cldImg={myImage} style={{ width: 200, height: 200 }} key={index} />
-            })
-          }
-        </View>
-      )}
+      <View style={styles.row}>
+        {images.length > 0 &&
+          images.map((public_id) => {
+            console.log('here?????????', public_id);
+            const myImage = cld.image(public_id);
+            return (
+              <View key={public_id}>
+                <AdvancedImage cldImg={myImage}  style={styles.image}/>
+              </View>
+            )
+          })
+        }
+      </View>
     </SafeAreaView>
   );
 }
@@ -142,11 +160,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center'
   },
-  images: {
-    width: 100,
-    height: 100,
-    borderRadius: 2,
-  }
+  row: {
+    flexDirection: 'row', // Arrange children horizontally
+    alignItems: 'center', // Align children vertically in the middle
+    justifyContent: 'flex-start', // Distribute children evenly along the main axis
+    flexWrap: 'wrap'
+  },
+  image: {
+    width: 120,
+    height: 120,
+    margin: 5,
+  },
 });
 
 const triggerStyles = {
@@ -168,7 +192,7 @@ const triggerStyles = {
   triggerTouchable: {
     underlayColor: 'darkblue',
     activeOpacity: 70,
-    style : {
+    style: {
       flex: 1,
     },
   },

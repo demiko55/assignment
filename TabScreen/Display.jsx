@@ -2,6 +2,8 @@ import React, {useContext, useState, useEffect} from 'react';
 import {View, Text, SafeAreaView, StyleSheet, Image} from 'react-native';
 import {AppStateContext} from '../App.js';
 import ImageTile from './ImageTile.jsx';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 
 export default Display  = ()=>{
@@ -34,6 +36,9 @@ export default Display  = ()=>{
           <Image source={userInfo.profileImage} style={styles.profileImage} />
           <Text style={styles.username}>{userInfo.firstname}</Text>
         </View>
+        <Ionicons.Button name="heart-outline" size = {18} backgroundColor='none' color='#007AFF'>
+                  <Text>Like</Text>
+        </Ionicons.Button>
       </SafeAreaView>
     )
   }
