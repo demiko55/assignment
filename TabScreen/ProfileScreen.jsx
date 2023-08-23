@@ -4,7 +4,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { AppStateContext } from '../App.js';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { Cloudinary } from "@cloudinary/url-gen";
-import {Menu, MenuOptions, MenuOption,MenuTrigger} from 'react-native-popup-menu';
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 
 
 const cld = new Cloudinary({
@@ -16,9 +16,9 @@ const cld = new Cloudinary({
 export default function ProfileScreen() {
   const { users, setUsers, activeUserIndex, otherUsers, setActiveUserIndex } = useContext(AppStateContext);
 
-  console.log('otherUsers', otherUsers);
+  // console.log('otherUsers', otherUsers);
 
-  console.log('activeUserIndex', activeUserIndex);
+  // console.log('activeUserIndex', activeUserIndex);
 
   const [images, setImages] = useState([]);
 
@@ -29,7 +29,7 @@ export default function ProfileScreen() {
     images: [],
   },);
   //images每次发生变化时，更新User 中的图片信息images
-  const updateUser = ()=>{
+  const updateUser = () => {
     let tempUsers = [...users];
     for (let i = 0; i < users.length; i++) {
       if (tempUsers[i].id === activeUserIndex) {
@@ -40,11 +40,11 @@ export default function ProfileScreen() {
       }
     }
   }
-  useEffect(()=>updateUser(), [images]);
+  useEffect(() => updateUser(), [images]);
 
   //activeIndex变化时，则更新整个loginUser
-  const updateLoginUser = ()=>{
-    let tempLoginUser={};
+  const updateLoginUser = () => {
+    let tempLoginUser = {};
     for (let i = 0; i < users.length; i++) {
       if (users[i].id === activeUserIndex) {
         tempLoginUser = users[i];
@@ -53,7 +53,7 @@ export default function ProfileScreen() {
     setLoginUser(tempLoginUser);
     setImages(tempLoginUser.images);
   }
-  useEffect(()=>updateLoginUser(), [activeUserIndex]);
+  useEffect(() => updateLoginUser(), [activeUserIndex]);
 
   console.log('LoginUSer', loginUser);
 
@@ -79,6 +79,8 @@ export default function ProfileScreen() {
     }
   }
 
+  //when uploaded multi images at the same time, it will store all the imgs info. When reclicked the upload button, uploadedImgs will be [] again.
+  const uploadedImgs = [];
   const handleUpload = (file) => {
     const data = new FormData();
     data.append('file', file);
@@ -91,10 +93,11 @@ export default function ProfileScreen() {
     }).then(res => res.json())
       .then(data => {
         console.log('cloudinary data', data);
-        let temp = [];
-        temp.push(data.public_id);
-        // console.log('temp after', temp);
-        setImages([...images, ...temp]);
+        uploadedImgs.push(data.public_id);
+        console.log('uploadedImgs', uploadedImgs);
+        //uploaded multi images will call fetch methods multi times.It will be called the second time before the first time call has a response
+        console.log('images before', images);
+        setImages([...uploadedImgs, ...images]);
       })
   }
 
@@ -133,7 +136,7 @@ export default function ProfileScreen() {
             const myImage = cld.image(public_id);
             return (
               <View key={public_id}>
-                <AdvancedImage cldImg={myImage}  style={styles.image}/>
+                <AdvancedImage cldImg={myImage} style={styles.image} />
               </View>
             )
           })
@@ -172,23 +175,27 @@ const styles = StyleSheet.create({
     height: 120,
     margin: 5,
   },
+  button:{
+    flex:1,
+    width:100,
+    backgroundColor:'blue'
+  }
 });
 
 const triggerStyles = {
   triggerText: {
     color: 'white',
     fontSize: 16,
-
   },
   triggerOuterWrapper: {
     padding: 5,
     flex: 1,
   },
   triggerWrapper: {
+    flex: 1,
     backgroundColor: 'blue',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
   },
   triggerTouchable: {
     underlayColor: 'darkblue',
@@ -201,14 +208,15 @@ const triggerStyles = {
 
 const optionsStyles = {
   optionsContainer: {
-    backgroundColor: 'green',
+    backgroundColor: 'white',
     padding: 5,
+    marginTop: 50
   },
   optionsWrapper: {
-    backgroundColor: 'purple',
+    // backgroundColor: 'purple',
   },
   optionWrapper: {
-    backgroundColor: 'yellow',
+    backgroundColor: 'green',
     margin: 5,
   },
   optionTouchable: {

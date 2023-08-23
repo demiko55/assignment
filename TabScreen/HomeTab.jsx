@@ -5,8 +5,8 @@ import { AppStateContext } from '../App.js';
 
 export default function HomeTab({ navigation }) {
   const { users, activeUserIndex, setClickUserIndex, clickedUserIndex, otherUsers, setOtherUsers } = useContext(AppStateContext);
-  console.log('users', users);
-  console.log('otherUsers', otherUsers);
+  // console.log('users', users);
+  // console.log('otherUsers', otherUsers);
 
   const handleOtherUsers = ()=>{
     const temp = [...users];
@@ -24,7 +24,7 @@ export default function HomeTab({ navigation }) {
     setClickUserIndex(id);
     navigation.navigate('Display');
   }
-  console.log('clickedUserIndex', clickedUserIndex);
+  // console.log('clickedUserIndex', clickedUserIndex);
 
   const renderItem = ({ item }) => (
     <SafeAreaView>

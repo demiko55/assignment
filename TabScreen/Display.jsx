@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { AppStateContext } from '../App.js';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { Cloudinary } from "@cloudinary/url-gen";
 import Like from './Like.jsx';
@@ -16,7 +15,7 @@ const cld = new Cloudinary({
 export default Display = () => {
   const { clickedUserIndex, users } = useContext(AppStateContext);
 
-  console.log('clickedUserIndex in Display', clickedUserIndex);
+  // console.log('clickedUserIndex in Display', clickedUserIndex);
 
   const [userInfo, setUserInfo] = useState({});
 
@@ -28,7 +27,7 @@ export default Display = () => {
     }
   }, []);
 
-  console.log("userInfo", userInfo);
+  // console.log("userInfo", userInfo);
 
   if (userInfo === undefined || userInfo.images === undefined) {
     return (
@@ -51,13 +50,7 @@ export default Display = () => {
                 return (
                   <View key={public_id}>
                     <AdvancedImage cldImg={myImage} style={styles.image} />
-                    {/* <TouchableOpacity style={{marginLeft:5}}>
-                      <Ionicons name={flag ? "heart" : "heart-outline"} size={18}  color='#007AFF' onPress={handleLike}>
-                      <Text>Like</Text>
-                      </Ionicons>
-                    </TouchableOpacity> */}
                     <Like />
-
                   </View>
                 )
               })
