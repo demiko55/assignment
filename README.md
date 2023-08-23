@@ -1,6 +1,10 @@
 # assignment
-![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 12](https://github.com/demiko55/assignment/assets/116925220/beaa7d53-f154-4074-af08-6152538c9961)
-![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 18](https://github.com/demiko55/assignment/assets/116925220/646bd96a-6ea4-4940-b191-d965f77dc731)
-![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 26](https://github.com/demiko55/assignment/assets/116925220/7fbacd80-ed40-40bd-b8cf-15127fec583f)
-![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 07](https://github.com/demiko55/assignment/assets/116925220/094beaf3-bbe4-488e-bdda-9d0b12f6b74c)
-![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 34](https://github.com/demiko55/assignment/assets/116925220/ebbb0d4e-6be3-4d7a-9228-ea90dad409b6)
+![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 12 Medium](https://github.com/demiko55/assignment/assets/116925220/73cfa79a-7e85-417f-a7d9-fa386b67f0bd)
+
+![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 18 Medium](https://github.com/demiko55/assignment/assets/116925220/56ff3ca7-5792-4c84-8c7a-8c8c9d835b1a)
+
+![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 26 Small](https://github.com/demiko55/assignment/assets/116925220/d437d749-dd55-41fc-aa16-b2d94e77f4b2)
+
+![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 07 Medium](https://github.com/demiko55/assignment/assets/116925220/74bac2f0-1033-4c3d-b3d3-d11d4b1559cb)
+
+![Simulator Screenshot - iPhone 14 Pro - 2023-08-22 at 17 27 34 Medium](https://github.com/demiko55/assignment/assets/116925220/4155da4d-6fc8-4bf2-8cd5-c97146a4fdf4)
