@@ -73,15 +73,27 @@ export default function ProfileScreen() {
             type: imageInfo.type,
             name: imageInfo.fileName
           }
+          console.log('time', new Date().getTime());
           handleUpload(file);//setTimeout()
         })
+        // await Promise.all(
+        //   data.map(async (imageInfo)=>{
+        //     let file = {
+        //       uri: imageInfo.uri,
+        //       type: imageInfo.type,
+        //       name: imageInfo.fileName
+        //     }
+        //     console.log('time', new Date().getTime());
+        //     await handleUpload(file); //not working as expected
+        //   })
+        // )
       }
     }
   }
 
   //when uploaded multi images at the same time, it will store all the imgs info. When reclicked the upload button, uploadedImgs will be [] again.
   const uploadedImgs = [];
-  const handleUpload = (file) => {
+  const handleUpload = async (file) => {
     const data = new FormData();
     data.append('file', file);
     data.append('upload_preset', 'moment');
@@ -175,10 +187,10 @@ const styles = StyleSheet.create({
     height: 120,
     margin: 5,
   },
-  button:{
-    flex:1,
-    width:100,
-    backgroundColor:'blue'
+  button: {
+    flex: 1,
+    width: 100,
+    backgroundColor: 'blue'
   }
 });
 
